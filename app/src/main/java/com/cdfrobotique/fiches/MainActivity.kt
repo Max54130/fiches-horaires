@@ -175,7 +175,7 @@ class MainActivity : ComponentActivity() {
         }
 
         webView.addJavascriptInterface(BlobBridge(), "AndroidBlob")
-        webView.loadUrl("https://appassets.androidplatform.net/assets/index.html")
+        webView.loadUrl("https://appassets.androidplatform.net/assets/app.html")
     }
 
     override fun onResume() {

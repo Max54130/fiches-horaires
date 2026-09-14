@@ -7,7 +7,16 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 
-const htmlPath = path.join(__dirname, '../app/src/main/assets/index.html');
+const candidatePaths = [
+  path.join(__dirname, '../app/src/main/assets/app.html'),
+  path.join(__dirname, '../app.html'),
+  path.join(__dirname, '../app/src/main/assets/index.html'),
+  path.join(__dirname, '../index.html')
+];
+const htmlPath = candidatePaths.find(p => fs.existsSync(p));
+if (!htmlPath) {
+  throw new Error('Aucun fichier HTML cible (app.html ou index.html) trouvé pour les tests.');
+}
 const html = fs.readFileSync(htmlPath, 'utf8');
 
 // Extraction des scripts JS pour évaluation dans un bac à sable isolé
