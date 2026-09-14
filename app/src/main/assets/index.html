@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="description" content="Éditeur de fiches horaires de navettes au standard de transport. 100% hors-ligne, export PNG et impression A4." />
+<meta name="description" content="Éditeur de fiches horaires de navettes au standard de transport. export PNG et impression A4." />
 <meta name="theme-color" content="#0f172a" />
 <title>Générateur de fiches horaires</title>
 <link rel="stylesheet" href="fonts/manrope.css">
@@ -1035,17 +1035,89 @@
     }
   }
 
+  
+  /* Splash Screen */
+  .app-splash {
+    position: fixed;
+    inset: 0;
+    background: #DFEEFC;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.4s;
+  }
+  .app-splash.hide {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    animation: splashPop 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes splashPop {
+    0% { transform: scale(0.9); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .splash-icon {
+    font-size: 54px;
+    line-height: 1;
+    filter: drop-shadow(0 4px 12px rgba(0, 91, 176, 0.15));
+  }
+  .splash-title {
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    color: #1f2d5a;
+  }
+  .splash-title span {
+    color: #009de0;
+  }
+  .splash-bar {
+    width: 64px;
+    height: 3px;
+    background: rgba(0, 91, 176, 0.15);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+  }
+  .splash-progress {
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 100%;
+    background: #009de0;
+    border-radius: 3px;
+    animation: splashSlide 0.9s ease-in-out infinite alternate;
+  }
+  @keyframes splashSlide {
+    0% { transform: translateX(-60%); }
+    100% { transform: translateX(60%); }
+  }
+
   </style>
 </head>
 <body>
 
+<div id="app-splash" class="app-splash" aria-hidden="true">
+  <div class="splash-content">
+    <div class="splash-icon">🚌</div>
+    <div class="splash-title">Générateur de fiches <span>horaires</span></div>
+    <div class="splash-bar"><div class="splash-progress"></div></div>
+  </div>
+</div>
+
+
 <header class="app-header" id="app-header">
   <div class="header-brand-row">
-    <a href="index.html" class="nav-back-link" title="Retourner à la page de présentation">← Présentation</a>
+    
     <h1 id="app-title" onclick="state.currentFicheId = null; saveState(); render();" role="button" tabindex="0" aria-label="Retourner à l'accueil">
       FICHES <span>HORAIRES</span>
     </h1>
-    <span class="ks-badge-status">v2.0 · 100% Hors-ligne</span>
+    
   </div>
   <div class="header-actions">
     <button class="btn-header-main" id="btn-new-fiche" aria-label="Créer une nouvelle fiche horaire">+ Nouvelle fiche</button>
@@ -2711,6 +2783,17 @@ document.getElementById('import-file').addEventListener('change', (e) => {
 });
 
 (function init() {
+
+  // Splash Screen Dismiss
+  const splashEl = document.getElementById('app-splash');
+  if (splashEl) {
+    const delay = (typeof AndroidBlob !== 'undefined') ? 40 : 800;
+    setTimeout(() => {
+      splashEl.classList.add('hide');
+      setTimeout(() => splashEl.remove(), 400);
+    }, delay);
+  }
+
   checkStorage();
   if (!storageAvailable) showStorageWarning();
   loadState();

@@ -1,8 +1,6 @@
 # Fiches Horaires — Conception & Signalétique de Navettes
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/Max54130/fiches-horaires/actions)
-[![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)](https://github.com/Max54130/fiches-horaires/releases)
-[![Offline](https://img.shields.io/badge/offline-100%25-success.svg)](#architecture)
 [![Android](https://img.shields.io/badge/Android-7.0%20%E2%86%92%2015-3DDC84.svg?logo=android&logoColor=white)](https://github.com/Max54130/fiches-horaires/releases)
 [![Web App](https://img.shields.io/badge/Web%20App-En%20Ligne-0284c7.svg)](https://max54130.github.io/fiches-horaires/)
 [![Lighthouse Mobile](https://img.shields.io/badge/Lighthouse%20Mobile-95%2B-forestgreen.svg)](#performance--accessibilit%C3%A9)
@@ -17,10 +15,8 @@
 
 | Plateforme | Accès Direct | Description |
 | :--- | :--- | :--- |
-| **🌐 Page Vitrine** | [max54130.github.io/fiches-horaires/](https://max54130.github.io/fiches-horaires/) | Vitrine avec **démonstrateur interactif en direct** et téléchargements |
-| **⚡ Générateur Web** | [max54130.github.io/fiches-horaires/app.html](https://max54130.github.io/fiches-horaires/app.html) | Éditeur complet, autonome et réactif (mobile & desktop) |
-| **📱 Application Android** | [Télécharger l'APK v2.0 (GitHub Releases)](https://github.com/Max54130/fiches-horaires/releases) | Application native avec retour tactile haptique et stockage hors-ligne |
-| **📋 Décisions Design** | [DECISIONS.md](DECISIONS.md) | Rapport des partis pris anti-slop et architecture d'expérience utilisateur |
+| **🌐 Application Web** | [max54130.github.io/fiches-horaires/](https://max54130.github.io/fiches-horaires/) | Générateur complet, autonome et réactif avec écran de démarrage splash |
+| **📱 Application Android** | [Télécharger l'APK (GitHub Releases)](https://github.com/Max54130/fiches-horaires/releases) | Application native avec splash screen, retour tactile haptique et stockage local |
 
 ---
 
@@ -50,13 +46,14 @@
 
 Inspiré des principes de design rigoureux et artisanal d'[impeccable.style](https://impeccable.style), l'outil privilégie la clarté ferroviaire et supprime tout artefact d'IA ou décoration inutile :
 
-1. **Matrice Automatique Type Gare Routière** : Les départs sont regroupés par tranche horaire avec les minutes compactées dans les cellules, assurant une lecture instantanée pour les passagers.
-2. **Propagation Assistée `+10 min`** : Saisissez l'heure de départ à la gare, l'algorithme calcule et propage automatiquement les estimations aux arrêts suivants.
-3. **Détection d'Anomalies Chronologiques** : Alerte visuelle immédiate en cas de saut temporel ou d'inversion d'horaire entre deux arrêts (avec tolérance du passage de minuit).
-4. **Double Sens en Miroir** : Inversion instantanée des terminus et de la séquence des arrêts pour configurer le trajet retour en 1 clic.
-5. **Chiffres Tabulaires Stricts** : Alignement vertical au pixel près (`tabular-nums`) de toutes les colonnes d'heures et de minutes.
-6. **Export PNG Vectoriel & Impression A4** : Sortie prête à imprimer au format A4 portrait ou export image haute résolution pour les canaux WhatsApp / Discord de l'événement.
-7. **100% Souverain & Hors-ligne** : Aucune donnée ne quitte votre appareil, aucun cookie, aucun script externe.
+1. **Écran de Démarrage (Splash Screen)** : Accueil fluide avec transition soignée au lancement de l'application sur le web et sur mobile.
+2. **Matrice Automatique Type Gare Routière** : Les départs sont regroupés par tranche horaire avec les minutes compactées dans les cellules, assurant une lecture instantanée pour les passagers.
+3. **Propagation Assistée `+10 min`** : Saisissez l'heure de départ à la gare, l'algorithme calcule et propage automatiquement les estimations aux arrêts suivants.
+4. **Détection d'Anomalies Chronologiques** : Alerte visuelle immédiate en cas de saut temporel ou d'inversion d'horaire entre deux arrêts (avec tolérance du passage de minuit).
+5. **Double Sens en Miroir** : Inversion instantanée des terminus et de la séquence des arrêts pour configurer le trajet retour en 1 clic.
+6. **Chiffres Tabulaires Stricts** : Alignement vertical au pixel près (`tabular-nums`) de toutes les colonnes d'heures et de minutes.
+7. **Export PNG Vectoriel & Impression A4** : Sortie prête à imprimer au format A4 portrait ou export image haute résolution pour les canaux WhatsApp / Discord de l'événement.
+8. **Souverain & Autonome** : Aucune donnée ne quitte votre appareil, aucun cookie, aucun script externe.
 
 ---
 
@@ -66,21 +63,18 @@ Le projet concilie une utilisation fluide sur le web et une intégration native 
 
 ```
 .
-├── index.html                     → Vitrine officielle avec démo interactive en direct
-├── app.html                       → Application éditeur complète (Web)
+├── index.html                     → Application complète avec écran de démarrage splash
 ├── docs/                          → Miroir de publication automatique pour GitHub Pages
-│   ├── index.html                 (Vitrine)
-│   ├── app.html                   (Éditeur)
+│   ├── index.html                 (Application)
 │   ├── fonts/                     (Polices Manrope WOFF2 locales)
 │   └── lib/                       (html2canvas embarqué)
-├── DECISIONS.md                   → Journal des décisions de design et choix anti-slop
 ├── DOCUMENTATION.md               → Manuel technique détaillé (Android, Kotlin, ponts JS)
 ├── tests/
 │   └── fiches_validation.test.js  → Suite de 21 tests unitaires automatisés
 └── app/                           → Application Android Studio (Kotlin + WebView)
     └── src/main/
-        ├── assets/                → app.html + fonts + lib (embarqués dans l'APK)
-        └── java/.../MainActivity  → WebViewAssetLoader + retour haptique + partage natif
+        ├── assets/                → index.html + fonts + lib (embarqués dans l'APK)
+        └── java/.../MainActivity  → WebViewAssetLoader + splash natif + retour haptique
 ```
 
 ---
