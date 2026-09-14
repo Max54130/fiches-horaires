@@ -821,219 +821,265 @@
     background: var(--accent-hover);
   }
 
-  /* Fiche Render Vectoriel (Aperçu) */
+  /* ============================================================
+     FICHE HORAIRE — RENDU PAYSAGE A4 HAUTE DÉFINITION (STANDARD TRANSPORT)
+     ============================================================ */
+  .preview-wrap {
+    width: 100%;
+    overflow-x: auto;
+    padding: 18px 0;
+    display: flex;
+    justify-content: center;
+    background: var(--surface-secondary, #f1f5f9);
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
+
   .fiche-render {
     background: #ffffff;
-    color: #000000;
-    padding: 24px;
+    color: #0f172a;
+    width: 1060px;
+    min-width: 1060px;
+    box-sizing: border-box;
+    padding: 32px 36px;
     border-radius: 8px;
-    border: 1px solid #cbd5e1;
-    box-shadow: var(--shadow);
-    max-width: 900px;
+    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.09), 0 1px 4px rgba(15, 23, 42, 0.05);
     margin: 0 auto;
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
+
+  /* Entête Fiche */
   .fiche-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid #0f172a;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-    gap: 16px;
-  }
-  .fiche-title h2 {
-    font-size: 20px;
-    font-weight: 900;
-    color: #0f172a;
-    letter-spacing: -0.02em;
-  }
-  .fiche-title p {
-    font-size: 13px;
-    font-weight: 700;
-    color: #475569;
-  }
-  .fiche-logo {
-    max-width: 140px;
-    max-height: 60px;
-    object-fit: contain;
-  }
-  .fiche-table-wrap {
+    border-bottom: 4px solid var(--c1, #009de0);
+    padding-bottom: 16px;
     margin-bottom: 20px;
+    gap: 24px;
   }
-  .fiche-table-banner {
-    color: #ffffff;
-    font-weight: 800;
-    font-size: 13px;
-    padding: 8px 12px;
-    border-radius: 4px 4px 0 0;
-    letter-spacing: 0.04em;
+  .big-logo {
+    max-width: 230px;
+    max-height: 90px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+  .big-logo-placeholder {
+    width: 140px;
+    height: 60px;
+    flex-shrink: 0;
+  }
+  .fiche-titles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
+    gap: 4px;
+    flex: 1;
+  }
+  .main-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: #1f2d5a;
+    line-height: 1.15;
     text-transform: uppercase;
+    letter-spacing: -0.01em;
   }
+  .periode {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--c1, #009de0);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .jours {
+    font-size: 13px;
+    font-weight: 800;
+    color: #1f2d5a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: #e2e8f0;
+    padding: 3px 10px;
+    border-radius: 4px;
+    margin-top: 2px;
+    display: inline-block;
+  }
+
+  /* Bloc Sens (Direction) */
+  .sens-block {
+    margin-bottom: 22px;
+  }
+  .sens-block:last-of-type {
+    margin-bottom: 8px;
+  }
+  .sens-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #ffffff !important;
+    background: var(--c-main, #009de0);
+    padding: 10px 16px;
+    border-radius: 6px 6px 0 0;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  }
+  .sens-title .arrow {
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 19px;
+    opacity: 0.9;
+  }
+  .sens-title .arrow-sep {
+    font-size: 15px;
+    opacity: 0.85;
+    margin: 0 2px;
+  }
+  .period-badge-row {
+    margin: 8px 0 4px;
+  }
+  .period-title {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--c-main, #1f2d5a);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    background: var(--c-light, #e0f2fe);
+    border-left: 4px solid var(--c-main, #009de0);
+    display: inline-block;
+    border-radius: 0 4px 4px 0;
+  }
+
+  /* Table des Horaires Grille Routière */
   table.fiche-table {
     width: 100%;
-    border-collapse: collapse;
-    font-size: 12px;
-    color: #000000;
-    border: 1px solid #94a3b8;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 14px;
+    border: 2px solid var(--c-main, #009de0);
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    overflow: hidden;
+    background: #ffffff;
   }
   table.fiche-table th, table.fiche-table td {
-    border: 1px solid #cbd5e1;
-    padding: 5px 8px;
-    text-align: center;
+    box-sizing: border-box;
   }
-  table.fiche-table th.arret-header {
+  table.fiche-table th.arret-cell-head {
+    background: var(--c-main, #009de0);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 900;
     text-align: left;
-    font-weight: 800;
-    background: #f1f5f9;
-    width: 180px;
+    padding: 9px 14px;
+    width: 250px;
+    min-width: 200px;
+    border-right: 2px solid rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  table.fiche-table th.hour-head {
+    background: var(--c-main, #009de0);
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 900;
+    text-align: center;
+    padding: 9px 8px;
+    border-right: 1.5px solid rgba(255, 255, 255, 0.35);
+  }
+  table.fiche-table th.hour-head:last-child {
+    border-right: none;
+  }
+  table.fiche-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #cbd5e1;
+    border-right: 1px solid #e2e8f0;
+    text-align: center;
+    vertical-align: middle;
+  }
+  table.fiche-table td:last-child {
+    border-right: none;
+  }
+  table.fiche-table tr:last-child td {
+    border-bottom: none;
   }
   table.fiche-table td.arret-cell {
     text-align: left;
+    padding: 8px 14px;
+    font-size: 14px;
     font-weight: 700;
-    background: #f8fafc;
+    color: #0f172a;
+    background: #ffffff;
+    border-right: 2px solid var(--c-main, #009de0);
   }
-  table.fiche-table th.hour-head {
-    background: #e2e8f0;
-    font-weight: 800;
+  table.fiche-table tr.terminus-start td.arret-cell {
+    background: var(--c-light, #f0f9ff);
+    color: #0f172a;
+    font-weight: 900;
+    border-left: 6px solid var(--c-main, #009de0);
   }
+  table.fiche-table tr.terminus-end td.arret-cell {
+    background: var(--c-light, #f0f9ff);
+    color: #0f172a;
+    font-weight: 900;
+    border-left: 6px solid var(--c-main, #009de0);
+  }
+  table.fiche-table tr.terminus-start td.hour-cell,
+  table.fiche-table tr.terminus-end td.hour-cell {
+    background: rgba(2, 132, 199, 0.04);
+  }
+  table.fiche-table td.hour-cell {
+    font-size: 16px;
+    font-weight: 900;
+    color: #0f172a;
+  }
+  table.fiche-table td.hour-cell.empty-cell {
+    color: #94a3b8;
+    font-weight: 600;
+  }
+  table.fiche-table td.hour-cell .min-row {
+    line-height: 1.4;
+    font-weight: 900;
+    font-variant-numeric: tabular-nums lining-nums;
+  }
+
+  /* Légende et Mention Légale */
   .fiche-legende {
+    margin-top: 14px;
+    padding: 9px 14px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.5;
+  }
+  .fiche-legende .lbl {
     font-size: 11px;
-    color: #64748b;
+    font-weight: 900;
+    color: var(--c-main, #009de0);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 8px;
+    display: inline-block;
+  }
+  .fiche-footer {
     margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #cbd5e1;
+    font-size: 11px;
+    color: #475569;
     line-height: 1.4;
   }
-
-  /* Modale Confirmation */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.6);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 20px;
-  }
-  .modal-overlay.show { display: flex; }
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    max-width: 420px;
-    width: 100%;
-    box-shadow: var(--shadow-lg);
-  }
-  .modal h3 {
-    font-size: 17px;
-    font-weight: 800;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-  .modal p {
-    color: var(--text-soft);
-    font-size: 14px;
-    margin-bottom: 20px;
-  }
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
-
-  /* Toast Notification */
-  .toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #0f172a;
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 700;
-    opacity: 0;
-    transition: opacity 0.2s, transform 0.2s;
-    z-index: 9999;
-    pointer-events: none;
-    box-shadow: var(--shadow-lg);
-    border: 1px solid #334155;
-    text-align: center;
-  }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* Fullscreen Preview Overlay */
-  .fullscreen-preview {
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 1000;
-    display: none;
-    flex-direction: column;
-    padding: 20px;
-    overflow-y: auto;
-  }
-  .fullscreen-preview.show { display: flex; }
-  .close-preview {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1001;
-    background: var(--danger);
-    color: white;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    justify-content: center;
-    align-items: center;
-    font-size: 20px;
-    border: none;
-    cursor: pointer;
-    box-shadow: var(--shadow);
-  }
-  .preview-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    width: 100%;
-  }
-
-  /* Impression A4 Professionnelle */
-  @media print {
-    @page { size: A4 portrait; margin: 10mm; }
-    body {
-      background: #ffffff !important;
-      color: #000000 !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      font-size: 10pt !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-    .app-header, .sidebar, .panel-tabs, .header-actions,
-    .time-picker-overlay, .modal-overlay, .toast, .btn-primary, .btn-secondary,
-    .btn-danger, .autofill-btn, #live-preview, .fullscreen-preview,
-    .preview-actions, #btn-share-png, #btn-export-png, #btn-export-html, #btn-print, #btn-fullscreen {
-      display: none !important;
-    }
-    main { display: block !important; padding: 0 !important; margin: 0 !important; }
-    .content, .panel { padding: 0 !important; margin: 0 !important; border: none !important; box-shadow: none !important; background: transparent !important; }
-    .fiche-render {
-      display: block !important;
-      border: none !important;
-      box-shadow: none !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-    .fiche-header, .fiche-table-wrap {
-      break-inside: avoid;
-      page-break-inside: avoid;
-    }
+  .fiche-footer strong {
+    color: #0f172a;
+    font-weight: 900;
   }
 
   
@@ -2377,24 +2423,32 @@ function renderTabApercu(f) {
        </div>
     </div>`;
 
-  // Fonction pour ajuster la taille de la fiche à l'écran (Version Zoom robuste)
+  // Fonction pour ajuster la taille de la fiche paysage à l'écran
   const fitToScreen = () => {
     const pWrap = wrap.querySelector('#preview-wrap');
     const pFiche = wrap.querySelector('#fiche-render');
     if (pWrap && pFiche) {
-        const availableWidth = pWrap.clientWidth - 10;
-        const ratio = Math.min(1, availableWidth / 600);
-        pFiche.style.zoom = ratio;
-        // Fallback si zoom n'est pas supporté
-        if (pFiche.style.zoom === "" || pFiche.style.zoom === undefined) {
-           pFiche.style.transform = `scale(${ratio})`;
+      const availableWidth = pWrap.clientWidth - 24;
+      const baseWidth = 1060;
+      const ratio = Math.min(1, availableWidth / baseWidth);
+      if (ratio < 1) {
+        if ('zoom' in pFiche.style) {
+          pFiche.style.zoom = ratio;
+        } else {
+          pFiche.style.transformOrigin = 'top center';
+          pFiche.style.transform = `scale(${ratio})`;
+          pWrap.style.minHeight = (pFiche.offsetHeight * ratio + 30) + 'px';
         }
+      } else {
+        pFiche.style.zoom = '1';
+        pFiche.style.transform = 'none';
+        pWrap.style.minHeight = 'auto';
+      }
     }
   };
 
   setTimeout(fitToScreen, 100);
   window.addEventListener('resize', fitToScreen);
-  // Observer les changements pour réagir au clavier
   if (window.ResizeObserver) {
     new ResizeObserver(() => fitToScreen()).observe(wrap);
   }
@@ -2402,8 +2456,11 @@ function renderTabApercu(f) {
   wrap.querySelector('#btn-share-png').addEventListener('click', async () => {
     const target = wrap.querySelector('#fiche-render');
     showToast('📸 Capture en cours…');
+    const prevZoom = target.style.zoom;
+    const prevTransform = target.style.transform;
+    target.style.zoom = '1';
+    target.style.transform = 'none';
     try {
-      // Configuration html2canvas optimisée pour Android WebView
       const canvas = await html2canvas(target, {
         backgroundColor: '#ffffff',
         scale: 2,
@@ -2440,6 +2497,8 @@ function renderTabApercu(f) {
         reader.onerror = () => showToast('Erreur de lecture du fichier');
         reader.readAsDataURL(blob);
       }, 'image/png');
+      target.style.zoom = prevZoom;
+      target.style.transform = prevTransform;
     } catch (e) {
       console.error(e);
       showToast('Erreur capture : ' + e.message);
@@ -2460,8 +2519,14 @@ function renderTabApercu(f) {
   wrap.querySelector('#btn-export-png').addEventListener('click', async () => {
     const target = wrap.querySelector('#fiche-render');
     showToast('Génération de l’image…');
+    const prevZoom = target.style.zoom;
+    const prevTransform = target.style.transform;
+    target.style.zoom = '1';
+    target.style.transform = 'none';
     try {
       const canvas = await html2canvas(target, { backgroundColor: '#ffffff', scale: 2, useCORS: true });
+      target.style.zoom = prevZoom;
+      target.style.transform = prevTransform;
       // canvas.toBlob() pour produire un vrai Blob (compatible Android bridge)
       canvas.toBlob((blob) => {
         if (!blob) { showToast('Erreur export PNG'); return; }
@@ -2614,59 +2679,69 @@ function extractThemeFromImage(img) {
 }
 
 function renderFicheHTML(f) {
-  const c1 = f.colors.sens1;
-  const c1l = lighten(c1, 0.85);
-  const c2 = f.colors.sens2;
-  const c2l = lighten(c2, 0.85);
+  const c1 = (f.colors && f.colors.sens1) ? f.colors.sens1 : '#009de0';
+  const c1l = lighten(c1, 0.88);
+  const c2 = (f.colors && f.colors.sens2) ? f.colors.sens2 : '#1f2d5a';
+  const c2l = lighten(c2, 0.88);
 
   let html = '';
   html += `
     <div class="fiche-header" style="border-bottom-color: ${c1};">
-      <img class="big-logo" src="${escapeAttr(f.logo || '')}" alt="logo" />
+      ${f.logo ? `<img class="big-logo" src="${escapeAttr(f.logo)}" alt="Logo" />` : '<div class="big-logo-placeholder"></div>'}
       <div class="fiche-titles">
-        <div class="main-title">${escapeHtml(f.titre)}</div>
-        <div class="periode" style="color: ${c1};">${escapeHtml(f.periode)}</div>
+        <div class="main-title">${escapeHtml(f.titre || f.nom || 'Fiche Horaires')}</div>
+        ${f.periode ? `<div class="periode" style="color: ${c1};">${escapeHtml(f.periode)}</div>` : ''}
         <div class="jours">${escapeHtml(joursToString(f.joursCoches))}</div>
       </div>
     </div>`;
 
+  const hasSens1Stops = f.sens[0] && f.sens[0].arrets && f.sens[0].arrets.length > 0;
+  const hasSens2Stops = f.sens[1] && f.sens[1].arrets && f.sens[1].arrets.length > 0;
+
   for (let i = 0; i < 2; i++) {
     const sens = f.sens[i];
-    const dep = sens.depart || '?';
-    const arr = sens.arrivee || '?';
+    if (!sens) continue;
+
+    // Si ce sens est vide et que l'autre est configuré, on ne pollue pas la fiche finale
+    if (sens.arrets.length === 0) {
+      if (!hasSens1Stops && !hasSens2Stops && i === 0) {
+        html += `<div class="sens-block" style="--c-main: ${c1}; --c-light: ${c1l};">
+          <p style="color:#64748b; font-size:14px; font-style:italic; padding: 24px; text-align:center;">Aucun arrêt configuré.</p>
+        </div>`;
+      }
+      continue;
+    }
+
+    const dep = sens.depart || (sens.arrets[0] || 'Départ');
+    const arr = sens.arrivee || (sens.arrets[sens.arrets.length - 1] || 'Arrivée');
     const sc = i === 0 ? c1 : c2;
     const scl = i === 0 ? c1l : c2l;
 
-    html += `<div class="sens-block" style="--c-main: ${sc}; --c-light: ${scl};">`;
-    html += `<h3 class="sens-title">${escapeHtml(dep)} <span class="arrow">›</span> ${escapeHtml(arr)}</h3>`;
-    if (sens.arrets.length === 0) {
-      html += '<p style="color:#888; font-size:13px; font-style:italic; margin: 4px 0 12px;">Aucun arrêt configuré.</p>';
-      html += '</div>';
-      continue;
-    }
+    html += `<div class="sens-block" style="--c-main: ${sc}; --c-light: ${scl};">
+      <h3 class="sens-title" style="background: ${sc};"><span class="arrow">›</span> ${escapeHtml(dep)} <span class="arrow-sep">➔</span> ${escapeHtml(arr)}</h3>`;
+
     if (sens.matin.length > 0) {
-      html += `<h4 class="period-title">Matin</h4>`;
+      html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Matin</span></div>`;
       html += buildTableHTML(sens, sens.matin);
     }
     if (sens.soir.length > 0) {
-      html += `<h4 class="period-title">Soir</h4>`;
+      html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Soir</span></div>`;
       html += buildTableHTML(sens, sens.soir);
     }
     if (sens.matin.length === 0 && sens.soir.length === 0) {
-      html += '<p style="color:#888; font-size:13px; font-style:italic; margin: 4px 0 12px;">Aucun horaire saisi.</p>';
+      html += '<p style="color:#64748b; font-size:13px; font-style:italic; margin: 8px 12px 16px;">Aucun horaire saisi pour ce sens.</p>';
     }
     html += '</div>';
   }
 
   if (f.legende && f.legende.trim()) {
     const lignes = f.legende.split(/\r?\n/).filter(l => l.trim()).map(l => escapeHtml(l));
-    html += `<div class="fiche-legende"><span class="lbl">Légende</span>${lignes.join('<br>')}</div>`;
+    html += `<div class="fiche-legende"><span class="lbl" style="color:${c1};">LÉGENDE</span>${lignes.join(' &nbsp;•&nbsp; ')}</div>`;
   }
 
   html += `
     <div class="fiche-footer">
-      <strong>ATTENTION :</strong> les horaires de passage aux arrêts sont fournis à titre indicatif.
-      Il est conseillé de prévoir une marge de sécurité.
+      <strong>ATTENTION :</strong> Les horaires de passage aux arrêts sont fournis à titre indicatif sous réserve des conditions de circulation. Il est conseillé de prévoir une marge de sécurité.
     </div>`;
   return html;
 }
@@ -2691,25 +2766,19 @@ function buildTableHTML(sens, columns) {
   const nArrets = sens.arrets.length;
   const singleStop = nArrets === 1;
 
-  // 1) Parse toutes les cellules
   const parsedCols = columns.map(col => col.map(parseTime));
-
-  // 2) Heure de référence de chaque colonne (1er arrêt parsable)
   const colRefHours = parsedCols.map(col => {
     for (const p of col) if (p.hour !== null) return p.hour;
     return null;
   });
 
-  // 3) Heures pleines distinctes (triées)
   const hourSet = new Set();
   colRefHours.forEach(h => { if (h !== null) hourSet.add(h); });
   const sortedHours = [...hourSet].sort((a, b) => a - b);
 
-  // 4) Colonnes "non parsables"
   const extraColIndexes = [];
   colRefHours.forEach((h, i) => { if (h === null) extraColIndexes.push(i); });
 
-  // 5) Matrice cellsByHour[arret][heure] = [valeurs]
   const cellsByHour = {};
   for (let r = 0; r < nArrets; r++) cellsByHour[r] = {};
   for (let c = 0; c < parsedCols.length; c++) {
@@ -2730,18 +2799,16 @@ function buildTableHTML(sens, columns) {
     }
   }
 
-  // 6) En-tête : si plusieurs arrêts, on garde la colonne arrêt à gauche
   let html = '<table class="fiche-table"><thead><tr>';
-  if (!singleStop) html += '<th class="arret-cell-head"></th>';
+  if (!singleStop) html += '<th class="arret-cell-head">Arrêts</th>';
   for (const h of sortedHours) {
     html += `<th class="hour-head">${h}h</th>`;
   }
   for (const _ of extraColIndexes) {
-    html += `<th class="hour-head">—</th>`;
+    html += '<th class="hour-head">—</th>';
   }
   html += '</tr></thead><tbody>';
 
-  // 7) Lignes
   for (let r = 0; r < nArrets; r++) {
     let cls = '';
     if (!singleStop) {
@@ -2758,15 +2825,14 @@ function buildTableHTML(sens, columns) {
       if (values.length === 0) {
         html += '<td class="hour-cell empty-cell">—</td>';
       } else {
-        const inner = values.map(v => `<div class="min-row">${escapeHtml(v)}</div>`).join('');
-        html += `<td class="hour-cell">${inner}</td>`;
+        html += '<td class="hour-cell"><div class="min-row">' + values.map(v => `<span>${escapeHtml(v)}</span>`).join(' ') + '</div></td>';
       }
     }
 
-    for (const ci of extraColIndexes) {
-      const cell = parsedCols[ci][r];
-      if (cell.raw) html += `<td class="hour-cell">${escapeHtml(cell.raw)}</td>`;
-      else html += '<td class="hour-cell empty-cell">—</td>';
+    for (const ec of extraColIndexes) {
+      const cell = parsedCols[ec][r];
+      const val = cell ? (cell.raw || '—') : '—';
+      html += `<td class="hour-cell">${escapeHtml(val)}</td>`;
     }
 
     html += '</tr>';
@@ -2776,41 +2842,45 @@ function buildTableHTML(sens, columns) {
 }
 
 function buildStandaloneHTML(f) {
+  const c1 = (f.colors && f.colors.sens1) ? f.colors.sens1 : '#009de0';
+  const c2 = (f.colors && f.colors.sens2) ? f.colors.sens2 : '#1f2d5a';
   const styles = `
-    body { font-family: 'Manrope', system-ui, sans-serif; background: #f4f5f7; padding: 30px; margin: 0; color: #1a1d24; }
-    .fiche-render { background: white; padding: 32px 36px; border-radius: 8px; max-width: 1000px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
-    .fiche-header { display: flex; align-items: center; gap: 22px; margin-bottom: 22px; padding-bottom: 18px; border-bottom: 2px solid #009de0; }
-    .big-logo { width: 180px; max-height: 100px; object-fit: contain; flex-shrink: 0; }
-    .fiche-titles { display: flex; flex-direction: column; gap: 4px; flex: 1; }
-    .main-title { font-size: 26px; font-weight: 800; color: #1f2d5a; line-height: 1.1; text-transform: uppercase; }
-    .periode { font-size: 14px; font-weight: 700; color: #009de0; margin-top: 6px; text-transform: uppercase; }
-    .jours { font-size: 13px; font-weight: 700; color: #1f2d5a; text-transform: uppercase; }
-    .sens-title { font-size: 15px; font-weight: 800; color: #1f2d5a; margin: 18px 0 2px; padding: 8px 12px; background: var(--c-light, #d1ecf7); border-radius: 6px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
-    .arrow { color: var(--c-main, #009de0); font-weight: 800; }
-    .period-title { font-size: 13px; font-weight: 800; color: #1f2d5a; margin: 2px 0 2px; text-transform: uppercase; letter-spacing: 0.06em; }
-    table.fiche-table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 0; margin-bottom: 6px; font-size: 13px; border-radius: 6px; overflow: hidden; }
-    table.fiche-table td { padding: 8px 8px; text-align: center; }
-    table.fiche-table td.arret-cell { text-align: left; font-weight: 600; color: white; padding-left: 14px; min-width: 160px; background: var(--c-main, #009de0); }
-    table.fiche-table tr.terminus-start td { background: var(--c-main, #009de0); color: white; font-weight: 700; }
-    table.fiche-table tr.terminus-end td { background: var(--c-light, #d1ecf7); color: #1f2d5a; font-weight: 700; }
-    table.fiche-table tr.terminus-end td.arret-cell { background: var(--c-light, #d1ecf7); color: #1f2d5a; }
-    table.fiche-table .empty-cell { color: rgba(255,255,255,0.6); font-weight: 700; }
-    table.fiche-table th.hour-head { background: var(--c-light, #d1ecf7); color: #1f2d5a; font-weight: 800; text-align: center; font-size: 14px; padding: 8px 8px; border-right: 2px solid white; }
+    * { box-sizing: border-box; }
+    body { font-family: 'Manrope', system-ui, -apple-system, sans-serif; background: #f1f5f9; padding: 24px; margin: 0; color: #0f172a; }
+    .fiche-render { background: white; padding: 32px 36px; border-radius: 8px; width: 1060px; max-width: 100%; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    .fiche-header { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 4px solid ${c1}; }
+    .big-logo { max-width: 230px; max-height: 90px; object-fit: contain; flex-shrink: 0; }
+    .big-logo-placeholder { width: 140px; height: 60px; flex-shrink: 0; }
+    .fiche-titles { display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 4px; flex: 1; }
+    .main-title { font-size: 28px; font-weight: 900; color: #1f2d5a; line-height: 1.15; text-transform: uppercase; }
+    .periode { font-size: 16px; font-weight: 800; color: ${c1}; text-transform: uppercase; letter-spacing: 0.04em; }
+    .jours { font-size: 13px; font-weight: 800; color: #1f2d5a; text-transform: uppercase; letter-spacing: 0.05em; background: #e2e8f0; padding: 3px 10px; border-radius: 4px; }
+    .sens-block { margin-bottom: 22px; }
+    .sens-title { font-size: 17px; font-weight: 900; color: #ffffff !important; padding: 10px 16px; border-radius: 6px 6px 0 0; text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin: 0; }
+    .sens-title .arrow { font-size: 19px; }
+    .period-badge-row { margin: 8px 0 4px; }
+    .period-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 0 4px 4px 0; display: inline-block; }
+    table.fiche-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border: 2px solid var(--c-main, ${c1}); border-top: none; border-radius: 0 0 6px 6px; overflow: hidden; background: #ffffff; }
+    table.fiche-table th.arret-cell-head { background: var(--c-main, ${c1}); color: #ffffff; font-size: 13px; font-weight: 900; text-align: left; padding: 9px 14px; width: 250px; border-right: 2px solid rgba(255,255,255,0.4); text-transform: uppercase; }
+    table.fiche-table th.hour-head { background: var(--c-main, ${c1}); color: #ffffff; font-size: 16px; font-weight: 900; text-align: center; padding: 9px 8px; border-right: 1.5px solid rgba(255,255,255,0.35); }
     table.fiche-table th.hour-head:last-child { border-right: none; }
-    table.fiche-table th.arret-cell-head { background: var(--c-light, #d1ecf7); min-width: 160px; border-right: 2px solid white; }
-    table.fiche-table td.hour-cell { vertical-align: middle; text-align: center; padding: 8px 8px; font-weight: 800; border-right: 2px solid white; }
-    table.fiche-table td.hour-cell:last-child { border-right: none; }
-    table.fiche-table td.arret-cell { border-right: 2px solid white; }
-    table.fiche-table td.hour-cell .min-row { line-height: 1.5; font-weight: 800; }
-    .fiche-legende { margin-top: 18px; padding: 10px 12px; background: #f4f5f7; border-radius: 6px; font-size: 12px; color: #1a1d24; line-height: 1.6; }
-    .fiche-legende .lbl { font-size: 11px; font-weight: 700; color: #5b6470; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; display: block; }
-    .fiche-footer { margin-top: 20px; padding-top: 12px; border-top: 1px solid #e3e6ea; font-size: 11px; color: #5b6470; line-height: 1.5; }
-    .fiche-footer strong { color: #1a1d24; }
+    table.fiche-table td { padding: 8px 10px; border-bottom: 1px solid #cbd5e1; border-right: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
+    table.fiche-table td:last-child { border-right: none; }
+    table.fiche-table tr:last-child td { border-bottom: none; }
+    table.fiche-table td.arret-cell { text-align: left; padding: 8px 14px; font-size: 14px; font-weight: 700; color: #0f172a; border-right: 2px solid var(--c-main, ${c1}); }
+    table.fiche-table tr.terminus-start td.arret-cell, table.fiche-table tr.terminus-end td.arret-cell { background: #f0f9ff; font-weight: 900; border-left: 6px solid var(--c-main, ${c1}); }
+    table.fiche-table td.hour-cell { font-size: 16px; font-weight: 900; color: #0f172a; }
+    table.fiche-table td.hour-cell.empty-cell { color: #94a3b8; font-weight: 600; }
+    table.fiche-table td.hour-cell .min-row { line-height: 1.4; font-weight: 900; }
+    .fiche-legende { margin-top: 14px; padding: 9px 14px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; color: #334155; line-height: 1.5; }
+    .fiche-legende .lbl { font-size: 11px; font-weight: 900; text-transform: uppercase; margin-right: 8px; }
+    .fiche-footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid #cbd5e1; font-size: 11px; color: #475569; line-height: 1.4; }
+    .fiche-footer strong { color: #0f172a; font-weight: 900; }
     @media print {
-      @page { size: auto; margin: 8mm; }
+      @page { size: A4 landscape; margin: 8mm 10mm; }
       body { background: white !important; padding: 0 !important; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      .fiche-render { box-shadow: none !important; border-radius: 0 !important; max-width: 100% !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+      .fiche-render { box-shadow: none !important; border-radius: 0 !important; width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
       table.fiche-table { page-break-inside: avoid; }
     }
   `;
