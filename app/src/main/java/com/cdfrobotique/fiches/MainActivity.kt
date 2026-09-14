@@ -255,5 +255,19 @@ class MainActivity : ComponentActivity() {
                 startActivity(Intent.createChooser(intent, "Partager"))
             } catch (e: Exception) { Log.e("AndroidBlob", "Share failed", e) }
         }
+
+        @JavascriptInterface
+        fun print() {
+            runOnUiThread {
+                try {
+                    val printManager = getSystemService(PRINT_SERVICE) as? android.print.PrintManager
+                    val printAdapter = webView.createPrintDocumentAdapter("fiche-horaires")
+                    val attributes = android.print.PrintAttributes.Builder()
+                        .setMediaSize(android.print.PrintAttributes.MediaSize.ISO_A4.asLandscape())
+                        .build()
+                    printManager?.print("Fiche Horaires", printAdapter, attributes)
+                } catch (e: Exception) { Log.e("AndroidBlob", "Print failed", e) }
+            }
+        }
     }
 }

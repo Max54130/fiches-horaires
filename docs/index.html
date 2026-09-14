@@ -1153,6 +1153,129 @@
     100% { transform: translateX(65%); }
   }
 
+  
+  /* ============================================================
+     IMPRESSION A4 PLEINE PAGE PAYSAGE — EXCLUSIVE AU DOCUMENT
+     ============================================================ */
+  @media print {
+    @page {
+      size: A4 landscape;
+      margin: 8mm 10mm;
+    }
+
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    html, body {
+      width: 100% !important;
+      height: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      overflow: visible !important;
+    }
+
+    /* MASQUER TOUTE L'INTERFACE ET LES OUTILS DE L'APPLICATION */
+    header,
+    .app-header,
+    .header-brand-row,
+    .header-actions,
+    aside,
+    .sidebar,
+    .panel-tabs,
+    .preview-actions,
+    .fullscreen-preview,
+    .modal-overlay,
+    .toast,
+    .time-picker-overlay,
+    .app-splash,
+    #app-splash,
+    button,
+    input,
+    #import-file,
+    .hero-welcome,
+    .storage-warning,
+    #btn-share-png,
+    #btn-export-png,
+    #btn-export-html,
+    #btn-print,
+    #btn-fullscreen {
+      display: none !important;
+      visibility: hidden !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+    }
+
+    /* ÉTENDRE LE CONTENEUR PRINCIPAL SUR TOUTE LA PAGE */
+    main,
+    section.content,
+    .panel,
+    .preview-wrap,
+    .preview-container {
+      display: block !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-height: auto !important;
+      overflow: visible !important;
+    }
+
+    /* LA FICHE EN PLEIN CADRE PAYSAGE */
+    .fiche-render {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      transform: none !important;
+      zoom: 1 !important;
+      page-break-after: avoid !important;
+      page-break-inside: avoid !important;
+    }
+
+    .fiche-header {
+      margin-bottom: 16px !important;
+      padding-bottom: 12px !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    .sens-block {
+      margin-bottom: 16px !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    table.fiche-table {
+      width: 100% !important;
+      margin-bottom: 10px !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+
+    .fiche-legende, .fiche-footer {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+  }
+
   </style>
 </head>
 <body>
@@ -2402,6 +2525,45 @@ function propagateMirror(f, oldDepart, oldArrivee) {
   }
 }
 
+
+function printFiche(f) {
+  // Si sur application native Android avec bridge
+  if (typeof AndroidBlob !== 'undefined' && typeof AndroidBlob.print === 'function') {
+    AndroidBlob.print();
+    return;
+  }
+
+  // Impression via iframe isolée (garantit zéro interface et pur paysage)
+  let iframe = document.getElementById('fiche-print-frame');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.id = 'fiche-print-frame';
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    iframe.style.visibility = 'hidden';
+    document.body.appendChild(iframe);
+  }
+
+  const printHtml = buildStandaloneHTML(f);
+  const doc = iframe.contentWindow.document;
+  doc.open();
+  doc.write(printHtml);
+  doc.close();
+
+  setTimeout(() => {
+    try {
+      iframe.contentWindow.focus();
+      iframe.contentWindow.print();
+    } catch (e) {
+      window.print();
+    }
+  }, 400);
+}
+
 // ---------- TAB APERÇU ----------
 function renderTabApercu(f) {
   const wrap = document.createElement('div');
@@ -2546,7 +2708,7 @@ function renderTabApercu(f) {
   });
 
   wrap.querySelector('#btn-print').addEventListener('click', () => {
-    window.print();
+    printFiche(f);
   });
 
   return wrap;
