@@ -42,16 +42,16 @@ class MainActivity : ComponentActivity() {
         // Durée minimale d'affichage du splash, en millisecondes.
         // Sans cela, comme notre HTML est 100 % local, onPageFinished se déclenche
         // en ~200 ms et l'utilisateur ne voit pas l'écran de démarrage.
-        // 2000 ms = valeur réglée pour ce projet.
+        // 2500 ms = valeur réglée pour ce projet.
         //
         // Note : la sensation de durée du splash dépend aussi (et surtout) de
         // l'absence de coupure visuelle à sa disparition. Voir le commentaire
         // dans `Theme.FichesHoraires` (themes.xml) qui aligne windowBackground
         // sur la couleur du splash (#DFEEFC) — modèle repris de urgpocket.
-        private const val MIN_SPLASH_DURATION_MS = 2000L
+        private const val MIN_SPLASH_DURATION_MS = 2500L
         // Filet de sécurité : si onPageFinished tarde anormalement,
         // on libère le splash quoi qu'il arrive après ce délai.
-        private const val SPLASH_TIMEOUT_MS = 3000L
+        private const val SPLASH_TIMEOUT_MS = 3500L
     }
 
     private lateinit var webView: WebView
