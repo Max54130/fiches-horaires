@@ -1,0 +1,17 @@
+{
+  "name": "fiches-horaires-cdfr",
+  "version": "1.1.0",
+  "description": "Générateur de fiches horaires pour les navettes de la Coupe de France de Robotique",
+  "scripts": {
+    "test": "node tests/fiches_validation.test.js"
+  },
+  "keywords": [
+    "fiches",
+    "horaires",
+    "navettes",
+    "cdfr",
+    "planete-sciences"
+  ],
+  "author": "Maxime MAGRON",
+  "license": "MIT"
+}

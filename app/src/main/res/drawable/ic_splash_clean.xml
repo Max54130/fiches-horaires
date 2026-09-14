@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Un fond blanc pur pour tout le carré de l'icône -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" />
+        </shape>
+    </item>
+    <!-- Le logo au centre, réduit à une taille "safe" pour ne pas toucher les bords du cercle Android -->
+    <item
+        android:drawable="@drawable/ic_splash"
+        android:gravity="center"
+        android:width="72dp"
+        android:height="72dp" />
+</layer-list>

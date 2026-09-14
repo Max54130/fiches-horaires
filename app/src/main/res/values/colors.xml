@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#009de0</color>
+    <color name="primary_dark">#0079b3</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="splash_background">#FFFFFF</color>
+    <!-- Fond de l'adaptive icon. Volontairement non redéfinie dans values-night/
+         pour rester identique en mode sombre (le logo a son propre dégradé).
+         Couleur calée sur le centre clair du dégradé du logo navette pour fusion sans bord visible. -->
+    <color name="ic_launcher_background">#DFEEFC</color>
+    <!-- Fond du FrameLayout root, visible derrière les barres système transparentes
+         (status bar + nav bar). Doit matcher le fond du HTML pour éviter les bandes
+         de couleur disgracieuses autour de la WebView.
+         values/ : #f1f5f9 (mode light, matche bg-light du HTML)
+         values-night/ : #0f172a (mode dark, matche bg-dark du HTML, défaut) -->
+    <color name="window_bg">#f1f5f9</color>
+</resources>

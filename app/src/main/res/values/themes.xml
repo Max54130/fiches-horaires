@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ===========================================================
+         Thème de démarrage (Splash) — VERSION LIGHT
+         windowSplashScreenAnimatedIcon pointe vers l'adaptive icon launcher
+         (et non un PNG drawable simple) car Android 12+ applique un clipping
+         circulaire (cercle de 160dp) sur les drawables raster, ce qui rognait
+         le contenu rectangulaire de notre logo (globe haut, NAVETTE bas).
+         Les adaptive icons ne subissent pas ce clipping.
+         =========================================================== -->
+    <style name="Theme.FichesHoraires.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#DFEEFC</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.FichesHoraires</item>
+    </style>
+
+    <!-- ===========================================================
+         Thème principal de l'app — VERSION LIGHT
+         windowBackground volontairement EGAL au windowSplashScreenBackground
+         (#DFEEFC). Quand le splash se retire, l'écran reste de la même teinte
+         le temps que la WebView devienne visible — c'est cette continuité de
+         couleur qui supprime le "flash" et donne l'impression d'un splash
+         plus long. Modèle repris de urgpocket (qui aligne windowBackground sur
+         son @color/launch_bg).
+         =========================================================== -->
+    <style name="Theme.FichesHoraires" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:windowBackground">#DFEEFC</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+</resources>

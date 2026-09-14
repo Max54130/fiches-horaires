@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- ===========================================================
+         Thème de démarrage (Splash) — VERSION DARK
+         Identique au mode light. windowSplashScreenAnimatedIcon vise
+         l'adaptive icon pour éviter le clipping circulaire d'Android 12+.
+         =========================================================== -->
+    <style name="Theme.FichesHoraires.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#DFEEFC</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.FichesHoraires</item>
+    </style>
+
+    <!-- ===========================================================
+         Thème principal de l'app — VERSION DARK
+         Comme le splash garde un fond clair en mode nuit (le logo n'est lisible
+         que sur fond clair), windowBackground garde aussi la même teinte
+         (#DFEEFC) : transition fluide identique au mode light.
+         =========================================================== -->
+    <style name="Theme.FichesHoraires" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="android:windowBackground">#DFEEFC</item>
+        <item name="android:statusBarColor">#121212</item>
+        <item name="android:navigationBarColor">#121212</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+
+</resources>
