@@ -1295,7 +1295,6 @@
     #app-splash,
     button,
     input,
-    #import-file,
     .hero-welcome,
     .storage-warning,
     #btn-share-png,
@@ -1438,9 +1437,6 @@
   </div>
   <div class="header-actions">
     <button class="btn-header-main" id="btn-new-fiche" aria-label="Créer une nouvelle fiche horaire">+ Nouvelle fiche</button>
-    <button class="btn-header-util" id="btn-export-all" aria-label="Exporter toutes les fiches en fichier JSON">📤 Export JSON</button>
-    <button class="btn-header-util" id="btn-import-all" aria-label="Importer des fiches depuis un fichier JSON">📥 Import JSON</button>
-    <input type="file" id="import-file" accept="application/json" style="display:none" aria-label="Sélectionner le fichier JSON à importer" />
   </div>
 </header>
 
@@ -1868,7 +1864,7 @@ function showStorageWarning() {
     bar = document.createElement('div');
     bar.id = 'storage-warning';
     bar.className = 'storage-warning';
-    bar.innerHTML = '⚠️ <strong>Sauvegarde automatique impossible</strong> dans ce contexte (fichier ouvert depuis le gestionnaire de téléchargement). Utilise <strong>Export JSON</strong> pour sauvegarder tes fiches.';
+    bar.innerHTML = '⚠️ <strong>Sauvegarde automatique impossible</strong> dans ce contexte (fichier ouvert depuis le gestionnaire de téléchargement). ';
     document.body.insertBefore(bar, document.body.firstChild);
   }
 }
@@ -2054,11 +2050,11 @@ function renderTabGeneral(f) {
         </div>
       </div>
       <div class="form-group">
-        <label for="i-color1">Couleur sens 1</label>
+        <label for="i-color1">Couleur sens 1 (Aller)</label>
         <input type="color" id="i-color1" value="${escapeAttr(f.colors.sens1)}" aria-label="Couleur du bandeau du sens 1" />
       </div>
       <div class="form-group">
-        <label for="i-color2">Couleur sens 2</label>
+        <label for="i-color2">Couleur sens 2 (Retour)</label>
         <input type="color" id="i-color2" value="${escapeAttr(f.colors.sens2)}" aria-label="Couleur du bandeau du sens 2" />
       </div>
       <div class="form-group full">
@@ -2295,7 +2291,24 @@ function resizeImageToDataURL(file, maxWidth) {
 // ---------- TAB SENS ----------
 function renderTabSens(f, sensIdx) {
   const sens = f.sens[sensIdx];
+  const sc = sensIdx === 0 ? (f.colors.sens1 || '#005bb0') : (f.colors.sens2 || '#ed1e79');
+  const scl = lighten(sc, 0.90);
+
+  // Auto-inversion des arrêts si Sens 2 est vide et Sens 1 renseigné
+  if (sensIdx === 1 && (!sens.arrets || sens.arrets.length === 0) && f.sens[0] && f.sens[0].arrets && f.sens[0].arrets.length > 0) {
+    sens.arrets = [...f.sens[0].arrets].reverse();
+    if (!sens.depart) sens.depart = f.sens[0].arrivee;
+    if (!sens.arrivee) sens.arrivee = f.sens[0].depart;
+    saveState();
+  }
+
   const wrap = document.createElement('div');
+
+  // Bandeau rappel couleur du sens
+  const colorBanner = document.createElement('div');
+  colorBanner.style.cssText = 'display:flex; align-items:center; justify-content:space-between; padding:8px 14px; background:' + scl + '; border-left:5px solid ' + sc + '; border-radius:4px; margin-bottom:16px;';
+  colorBanner.innerHTML = '<span style="font-weight:900; font-size:13px; text-transform:uppercase; color:' + sc + ';">Sens ' + (sensIdx + 1) + ' — Couleur : <span style="font-family:monospace; background:#ffffff; padding:2px 8px; border-radius:4px; border:1px solid #cbd5e1;">' + sc + '</span></span><span style="font-size:12px; color:var(--text-soft); font-weight:700;">1 sens = 1 couleur sur la fiche</span>';
+  wrap.appendChild(colorBanner);
 
   const infoSection = document.createElement('div');
   infoSection.innerHTML = `
@@ -2329,9 +2342,12 @@ function renderTabSens(f, sensIdx) {
   const arretSection = document.createElement('div');
   arretSection.style.marginTop = '20px';
   arretSection.innerHTML = `
-    <h3 style="font-size:14px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px;">
+    <h3 style="font-size:14px; font-weight:700; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
       <span>Arrêts <span class="badge">${sens.arrets.length}</span></span>
-      <button class="btn-primary btn-small" id="btn-add-arret" aria-label="Ajouter un arrêt">+ Ajouter un arrêt</button>
+      <div style="display:flex; gap:6px;">
+        ${sensIdx === 1 ? '<button type="button" class="btn-secondary btn-small" id="btn-mirror-arrets" aria-label="Copier les arrêts du Sens 1 en ordre inversé">🔄 Inverser arrêts Sens 1</button>' : ''}
+        <button type="button" class="btn-primary btn-small" id="btn-add-arret" aria-label="Ajouter un arrêt">+ Ajouter un arrêt</button>
+      </div>
     </h3>
     <div id="arrets-container"></div>`;
   wrap.appendChild(arretSection);
@@ -2399,6 +2415,23 @@ function renderTabSens(f, sensIdx) {
         sens.soir.forEach(col => col.splice(i, 1));
         saveState(); renderArrets(); renderHoraires();
       });
+    });
+  }
+
+  const btnMirror = arretSection.querySelector('#btn-mirror-arrets');
+  if (btnMirror) {
+    btnMirror.addEventListener('click', () => {
+      if (f.sens[0] && f.sens[0].arrets && f.sens[0].arrets.length > 0) {
+        sens.arrets = [...f.sens[0].arrets].reverse();
+        if (!sens.depart) sens.depart = f.sens[0].arrivee;
+        if (!sens.arrivee) sens.arrivee = f.sens[0].depart;
+        saveState();
+        renderArrets();
+        renderHoraires();
+        showToast('Arrêts inversés depuis le Sens 1');
+      } else {
+        showToast('Aucun arrêt défini dans le Sens 1');
+      }
     });
   }
 
@@ -2935,14 +2968,21 @@ function extractThemeFromImage(img) {
     }
   }
 
-  const dark = secondBin ? binToHex(secondBin) : darken(main, 0.5);
+  let dark = secondBin ? binToHex(secondBin) : null;
+  if (!dark || dark.toLowerCase() === main.toLowerCase()) {
+    // Si aucune 2e couleur distincte n'est trouvée, choisir une couleur contrastée vive
+    dark = (mainHue > 30 && mainHue < 90) ? '#005bb0' : (mainHue > 180 && mainHue < 270) ? '#f59e0b' : '#ed1e79';
+  }
   return { main, dark };
 }
 
 function renderFicheHTML(f) {
-  const c1 = (f.colors && f.colors.sens1) ? f.colors.sens1 : '#009de0';
+  let c1 = (f.colors && f.colors.sens1) ? f.colors.sens1 : '#005bb0';
+  let c2 = (f.colors && f.colors.sens2) ? f.colors.sens2 : '#ed1e79';
+  if (c1.toLowerCase() === c2.toLowerCase()) {
+    c2 = '#ed1e79'; // Assure 2 couleurs distinctes (1 sens = 1 couleur)
+  }
   const c1l = lighten(c1, 0.88);
-  const c2 = (f.colors && f.colors.sens2) ? f.colors.sens2 : '#1f2d5a';
   const c2l = lighten(c2, 0.88);
 
   let html = '';
@@ -2960,12 +3000,17 @@ function renderFicheHTML(f) {
   const hasSens2Stops = f.sens[1] && f.sens[1].arrets && f.sens[1].arrets.length > 0;
 
   for (let i = 0; i < 2; i++) {
-    const sens = f.sens[i];
-    if (!sens) continue;
+    const origSens = f.sens[i];
+    if (!origSens) continue;
 
-    // Si ce sens est vide et que l'autre est configuré, on ne pollue pas la fiche finale
-    if (sens.arrets.length === 0) {
-      if (!hasSens1Stops && !hasSens2Stops && i === 0) {
+    // Déterminer les arrêts effectifs :
+    // Si Sens 2 n'a pas d'arrêts saisis mais que Sens 1 en a, on inverse automatiquement ceux du Sens 1
+    let arrets = (origSens.arrets && origSens.arrets.length > 0)
+      ? origSens.arrets
+      : (i === 1 && hasSens1Stops ? [...f.sens[0].arrets].reverse() : []);
+
+    if (arrets.length === 0) {
+      if (i === 0 && !hasSens2Stops) {
         html += `<div class="sens-block" style="--c-main: ${c1}; --c-light: ${c1l};">
           <p style="color:#64748b; font-size:14px; font-style:italic; padding: 24px; text-align:center;">Aucun arrêt configuré.</p>
         </div>`;
@@ -2973,24 +3018,37 @@ function renderFicheHTML(f) {
       continue;
     }
 
-    const dep = sens.depart || (sens.arrets[0] || 'Départ');
-    const arr = sens.arrivee || (sens.arrets[sens.arrets.length - 1] || 'Arrivée');
+    const dep = origSens.depart || (i === 1 && f.sens[0].arrivee ? f.sens[0].arrivee : (arrets[0] || (i === 0 ? 'Départ' : 'Retour')));
+    const arr = origSens.arrivee || (i === 1 && f.sens[0].depart ? f.sens[0].depart : (arrets[arrets.length - 1] || (i === 0 ? 'Arrivée' : 'Départ')));
     const sc = i === 0 ? c1 : c2;
     const scl = i === 0 ? c1l : c2l;
+
+    const sensEffective = {
+      depart: dep,
+      arrivee: arr,
+      arrets: arrets,
+      matin: origSens.matin || [],
+      soir: origSens.soir || []
+    };
 
     html += `<div class="sens-block" style="--c-main: ${sc}; --c-light: ${scl};">
       <h3 class="sens-title" style="background: ${sc};"><span class="arrow">›</span> ${escapeHtml(dep)} <span class="arrow-sep">➔</span> ${escapeHtml(arr)}</h3>`;
 
-    if (sens.matin.length > 0) {
+    const hasMatin = sensEffective.matin.length > 0;
+    const hasSoir = sensEffective.soir.length > 0;
+
+    if (hasMatin) {
       html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Matin</span></div>`;
-      html += buildTableHTML(sens, sens.matin);
+      html += buildTableHTML(sensEffective, sensEffective.matin);
     }
-    if (sens.soir.length > 0) {
+    if (hasSoir) {
       html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Soir</span></div>`;
-      html += buildTableHTML(sens, sens.soir);
+      html += buildTableHTML(sensEffective, sensEffective.soir);
     }
-    if (sens.matin.length === 0 && sens.soir.length === 0) {
-      html += '<p style="color:#64748b; font-size:13px; font-style:italic; margin: 8px 12px 16px;">Aucun horaire saisi pour ce sens.</p>';
+    if (!hasMatin && !hasSoir) {
+      // Grille propre avec arrêts et colonnes d'attente
+      html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Horaires</span></div>`;
+      html += buildTableHTML(sensEffective, [arrets.map(() => '')]);
     }
     html += '</div>';
   }
@@ -3195,12 +3253,6 @@ function createFiche() {
 }
 
 document.getElementById('btn-new-fiche').addEventListener('click', createFiche);
-document.getElementById('btn-export-all').addEventListener('click', exportAllJSON);
-document.getElementById('btn-import-all').addEventListener('click', () => document.getElementById('import-file').click());
-document.getElementById('import-file').addEventListener('change', (e) => {
-  if (e.target.files[0]) importAllJSON(e.target.files[0]);
-  e.target.value = '';
-});
 
 (function init() {
 
