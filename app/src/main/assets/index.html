@@ -915,7 +915,7 @@
   .sens-title {
     font-size: 17px;
     font-weight: 900;
-    color: #ffffff !important;
+    color: var(--c-text, #ffffff) !important;
     background: var(--c-main, #009de0);
     padding: 10px 16px;
     border-radius: 6px 6px 0 0;
@@ -928,14 +928,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
   .sens-title .arrow {
-    color: #ffffff;
+    color: var(--c-text, #ffffff) !important;
     font-weight: 900;
     font-size: 19px;
-    opacity: 0.9;
+    opacity: 0.95;
   }
   .sens-title .arrow-sep {
+    color: var(--c-text, #ffffff) !important;
     font-size: 15px;
-    opacity: 0.85;
+    opacity: 0.90;
     margin: 0 2px;
   }
   .period-badge-row {
@@ -973,25 +974,25 @@
   }
   table.fiche-table th.arret-cell-head {
     background: var(--c-main, #009de0);
-    color: #ffffff;
+    color: var(--c-text, #ffffff) !important;
     font-size: 13px;
     font-weight: 900;
     text-align: left;
     padding: 9px 14px;
     width: 250px;
     min-width: 200px;
-    border-right: 2px solid rgba(255, 255, 255, 0.4);
+    border-right: 2px solid var(--c-border, rgba(255, 255, 255, 0.4));
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
   table.fiche-table th.hour-head {
     background: var(--c-main, #009de0);
-    color: #ffffff;
+    color: var(--c-text, #ffffff) !important;
     font-size: 16px;
     font-weight: 900;
     text-align: center;
     padding: 9px 8px;
-    border-right: 1.5px solid rgba(255, 255, 255, 0.35);
+    border-right: 1.5px solid var(--c-border, rgba(255, 255, 255, 0.35));
   }
   table.fiche-table th.hour-head:last-child {
     border-right: none;
@@ -2865,6 +2866,44 @@ function darken(hex, amount = 0.3) {
   return '#' + hx(r) + hx(g) + hx(b);
 }
 
+// Calcul de la luminance relative normalisée WCAG 2.1 (0 = noir pur, 1 = blanc pur)
+function getLuminance(hex) {
+  let c = String(hex || '#000000').replace('#', '');
+  if (c.length === 3) c = c.split('').map(x => x + x).join('');
+  const r = parseInt(c.slice(0, 2), 16) / 255;
+  const g = parseInt(c.slice(2, 4), 16) / 255;
+  const b = parseInt(c.slice(4, 6), 16) / 255;
+  if (isNaN(r) || isNaN(g) || isNaN(b)) return 0;
+  const toLinear = v => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+}
+
+// Détermine la couleur de texte optimale sur un fond de couleur 'hex'
+// Si fond clair (jaune pétant, cyan, vert citron, pastel) -> texte sombre (#0f172a)
+// Si fond sombre (bleu marine, bordeaux, violet, vert foncé) -> texte blanc (#ffffff)
+function getContrastColor(hex) {
+  const lum = getLuminance(hex);
+  return lum > 0.38 ? '#0f172a' : '#ffffff';
+}
+
+function getContrastBorder(hex) {
+  const lum = getLuminance(hex);
+  return lum > 0.38 ? 'rgba(15, 23, 42, 0.25)' : 'rgba(255, 255, 255, 0.35)';
+}
+
+// Assure qu'un texte de couleur 'hex' reste parfaitement lisible sur fond blanc / très clair
+function getReadableTextColorOnWhite(hex) {
+  let current = hex || '#0f172a';
+  let lum = getLuminance(current);
+  let safety = 0;
+  while (lum > 0.18 && safety < 10) {
+    current = darken(current, 0.20);
+    lum = getLuminance(current);
+    safety++;
+  }
+  return current;
+}
+
 
 
 /**
@@ -2984,6 +3023,7 @@ function renderFicheHTML(f) {
   }
   const c1l = lighten(c1, 0.88);
   const c2l = lighten(c2, 0.88);
+  const c1w = getReadableTextColorOnWhite(c1);
 
   let html = '';
   html += `
@@ -2991,7 +3031,7 @@ function renderFicheHTML(f) {
       ${f.logo ? `<img class="big-logo" src="${escapeAttr(f.logo)}" alt="Logo" />` : '<div class="big-logo-placeholder"></div>'}
       <div class="fiche-titles">
         <div class="main-title">${escapeHtml(f.titre || f.nom || 'Fiche Horaires')}</div>
-        ${f.periode ? `<div class="periode" style="color: ${c1};">${escapeHtml(f.periode)}</div>` : ''}
+        ${f.periode ? `<div class="periode" style="color: ${c1w};">${escapeHtml(f.periode)}</div>` : ''}
         <div class="jours">${escapeHtml(joursToString(f.joursCoches))}</div>
       </div>
     </div>`;
@@ -3011,7 +3051,9 @@ function renderFicheHTML(f) {
 
     if (arrets.length === 0) {
       if (i === 0 && !hasSens2Stops) {
-        html += `<div class="sens-block" style="--c-main: ${c1}; --c-light: ${c1l};">
+        const c1t = getContrastColor(c1);
+        const c1b = getContrastBorder(c1);
+        html += `<div class="sens-block" style="--c-main: ${c1}; --c-light: ${c1l}; --c-text: ${c1t}; --c-border: ${c1b};">
           <p style="color:#64748b; font-size:14px; font-style:italic; padding: 24px; text-align:center;">Aucun arrêt configuré.</p>
         </div>`;
       }
@@ -3022,6 +3064,9 @@ function renderFicheHTML(f) {
     const arr = origSens.arrivee || (i === 1 && f.sens[0].depart ? f.sens[0].depart : (arrets[arrets.length - 1] || (i === 0 ? 'Arrivée' : 'Départ')));
     const sc = i === 0 ? c1 : c2;
     const scl = i === 0 ? c1l : c2l;
+    const sct = getContrastColor(sc);
+    const scb = getContrastBorder(sc);
+    const scw = getReadableTextColorOnWhite(sc);
 
     const sensEffective = {
       depart: dep,
@@ -3031,23 +3076,23 @@ function renderFicheHTML(f) {
       soir: origSens.soir || []
     };
 
-    html += `<div class="sens-block" style="--c-main: ${sc}; --c-light: ${scl};">
-      <h3 class="sens-title" style="background: ${sc};"><span class="arrow">›</span> ${escapeHtml(dep)} <span class="arrow-sep">➔</span> ${escapeHtml(arr)}</h3>`;
+    html += `<div class="sens-block" style="--c-main: ${sc}; --c-light: ${scl}; --c-text: ${sct}; --c-border: ${scb}; --c-on-white: ${scw};">
+      <h3 class="sens-title" style="background: ${sc}; color: ${sct} !important;"><span class="arrow" style="color: ${sct} !important;">›</span> ${escapeHtml(dep)} <span class="arrow-sep" style="color: ${sct} !important;">➔</span> ${escapeHtml(arr)}</h3>`;
 
     const hasMatin = sensEffective.matin.length > 0;
     const hasSoir = sensEffective.soir.length > 0;
 
     if (hasMatin) {
-      html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Matin</span></div>`;
+      html += `<div class="period-badge-row"><span class="period-title" style="color: ${scw}; border-left-color: ${sc}; background: ${scl};">Matin</span></div>`;
       html += buildTableHTML(sensEffective, sensEffective.matin);
     }
     if (hasSoir) {
-      html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Soir</span></div>`;
+      html += `<div class="period-badge-row"><span class="period-title" style="color: ${scw}; border-left-color: ${sc}; background: ${scl};">Soir</span></div>`;
       html += buildTableHTML(sensEffective, sensEffective.soir);
     }
     if (!hasMatin && !hasSoir) {
       // Grille propre avec arrêts et colonnes d'attente
-      html += `<div class="period-badge-row"><span class="period-title" style="color: ${sc}; border-left-color: ${sc}; background: ${scl};">Horaires</span></div>`;
+      html += `<div class="period-badge-row"><span class="period-title" style="color: ${scw}; border-left-color: ${sc}; background: ${scl};">Horaires</span></div>`;
       html += buildTableHTML(sensEffective, [arrets.map(() => '')]);
     }
     html += '</div>';
@@ -3055,7 +3100,7 @@ function renderFicheHTML(f) {
 
   if (f.legende && f.legende.trim()) {
     const lignes = f.legende.split(/\r?\n/).filter(l => l.trim()).map(l => escapeHtml(l));
-    html += `<div class="fiche-legende"><span class="lbl" style="color:${c1};">LÉGENDE</span>${lignes.join(' &nbsp;•&nbsp; ')}</div>`;
+    html += `<div class="fiche-legende"><span class="lbl" style="color:${c1w};">LÉGENDE</span>${lignes.join(' &nbsp;•&nbsp; ')}</div>`;
   }
 
   html += `
@@ -3161,8 +3206,12 @@ function buildTableHTML(sens, columns) {
 }
 
 function buildStandaloneHTML(f) {
-  const c1 = (f.colors && f.colors.sens1) ? f.colors.sens1 : '#009de0';
-  const c2 = (f.colors && f.colors.sens2) ? f.colors.sens2 : '#1f2d5a';
+  let c1 = (f.colors && f.colors.sens1) ? f.colors.sens1 : '#005bb0';
+  let c2 = (f.colors && f.colors.sens2) ? f.colors.sens2 : '#ed1e79';
+  if (c1.toLowerCase() === c2.toLowerCase()) {
+    c2 = '#ed1e79';
+  }
+  const c1w = getReadableTextColorOnWhite(c1);
   const styles = `
     * { box-sizing: border-box; }
     body { font-family: 'Manrope', system-ui, -apple-system, sans-serif; background: #f1f5f9; padding: 24px; margin: 0; color: #0f172a; }
@@ -3172,22 +3221,22 @@ function buildStandaloneHTML(f) {
     .big-logo-placeholder { width: 140px; height: 60px; flex-shrink: 0; }
     .fiche-titles { display: flex; flex-direction: column; align-items: flex-end; text-align: right; gap: 4px; flex: 1; }
     .main-title { font-size: 28px; font-weight: 900; color: #1f2d5a; line-height: 1.15; text-transform: uppercase; }
-    .periode { font-size: 16px; font-weight: 800; color: ${c1}; text-transform: uppercase; letter-spacing: 0.04em; }
+    .periode { font-size: 16px; font-weight: 800; color: ${c1w}; text-transform: uppercase; letter-spacing: 0.04em; }
     .jours { font-size: 13px; font-weight: 800; color: #1f2d5a; text-transform: uppercase; letter-spacing: 0.05em; background: #e2e8f0; padding: 3px 10px; border-radius: 4px; }
     .sens-block { margin-bottom: 22px; }
-    .sens-title { font-size: 17px; font-weight: 900; color: #ffffff !important; padding: 10px 16px; border-radius: 6px 6px 0 0; text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin: 0; }
-    .sens-title .arrow { font-size: 19px; }
+    .sens-title { font-size: 17px; font-weight: 900; color: var(--c-text, #ffffff) !important; padding: 10px 16px; border-radius: 6px 6px 0 0; text-transform: uppercase; display: flex; align-items: center; gap: 10px; margin: 0; }
+    .sens-title .arrow { font-size: 19px; color: var(--c-text, #ffffff) !important; }
     .period-badge-row { margin: 8px 0 4px; }
     .period-title { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; padding: 3px 10px; border-radius: 0 4px 4px 0; display: inline-block; }
     table.fiche-table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 14px; border: 2px solid var(--c-main, ${c1}); border-top: none; border-radius: 0 0 6px 6px; overflow: hidden; background: #ffffff; }
-    table.fiche-table th.arret-cell-head { background: var(--c-main, ${c1}); color: #ffffff; font-size: 13px; font-weight: 900; text-align: left; padding: 9px 14px; width: 250px; border-right: 2px solid rgba(255,255,255,0.4); text-transform: uppercase; }
-    table.fiche-table th.hour-head { background: var(--c-main, ${c1}); color: #ffffff; font-size: 16px; font-weight: 900; text-align: center; padding: 9px 8px; border-right: 1.5px solid rgba(255,255,255,0.35); }
+    table.fiche-table th.arret-cell-head { background: var(--c-main, ${c1}); color: var(--c-text, #ffffff) !important; border-right: 2px solid var(--c-border, rgba(255,255,255,0.4)); font-size: 13px; font-weight: 900; text-align: left; padding: 9px 14px; width: 250px; text-transform: uppercase; }
+    table.fiche-table th.hour-head { background: var(--c-main, ${c1}); color: var(--c-text, #ffffff) !important; border-right: 1.5px solid var(--c-border, rgba(255,255,255,0.35)); font-size: 16px; font-weight: 900; text-align: center; padding: 9px 8px; }
     table.fiche-table th.hour-head:last-child { border-right: none; }
     table.fiche-table td { padding: 8px 10px; border-bottom: 1px solid #cbd5e1; border-right: 1px solid #e2e8f0; text-align: center; vertical-align: middle; }
     table.fiche-table td:last-child { border-right: none; }
     table.fiche-table tr:last-child td { border-bottom: none; }
     table.fiche-table td.arret-cell { text-align: left; padding: 8px 14px; font-size: 14px; font-weight: 700; color: #0f172a; border-right: 2px solid var(--c-main, ${c1}); }
-    table.fiche-table tr.terminus-start td.arret-cell, table.fiche-table tr.terminus-end td.arret-cell { background: #f0f9ff; font-weight: 900; border-left: 6px solid var(--c-main, ${c1}); }
+    table.fiche-table tr.terminus-start td.arret-cell, table.fiche-table tr.terminus-end td.arret-cell { background: var(--c-light, #f0f9ff); font-weight: 900; border-left: 6px solid var(--c-main, ${c1}); }
     table.fiche-table td.hour-cell { font-size: 16px; font-weight: 900; color: #0f172a; }
     table.fiche-table td.hour-cell.empty-cell { color: #94a3b8; font-weight: 600; }
     table.fiche-table td.hour-cell .min-row { line-height: 1.4; font-weight: 900; }
